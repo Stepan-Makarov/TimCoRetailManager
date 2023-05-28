@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
-using TRMDataManager.Data;
+using TRMApi.Data;
 using TRMDataManagerLibrary.Data;
 using TRMDataManagerLibrary.Databases;
 

@@ -6,7 +6,7 @@ using TRMDataManagerLibrary.Models;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace TRMDataManager.Controllers
+namespace TRMApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

@@ -1,4 +1,4 @@
-namespace TRMDataManager.Models
+namespace TRMApi.Models
 {
     public class ErrorViewModel
     {

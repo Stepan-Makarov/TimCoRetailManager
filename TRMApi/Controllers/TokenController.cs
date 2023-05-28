@@ -4,9 +4,9 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using TRMDataManager.Data;
+using TRMApi.Data;
 
-namespace TRMDataManager.Controllers
+namespace TRMApi.Controllers
 {
     public class TokenController : Controller
     {
@@ -19,7 +19,7 @@ namespace TRMDataManager.Controllers
             _userManager = userManager;
         }
 
-        [Route("/token")]
+        [Route("/Token")]
         [HttpPost]
         public async Task<IActionResult> Create(string username, string password /*string grant_type*/)
         {

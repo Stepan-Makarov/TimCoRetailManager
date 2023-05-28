@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
-using TRMDataManager.Models;
+using TRMApi.Models;
 
-namespace TRMDataManager.Controllers
+namespace TRMApi.Controllers
 {
     public class HomeController : Controller
     {

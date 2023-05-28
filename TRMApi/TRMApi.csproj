@@ -4,7 +4,7 @@
     <TargetFramework>net7.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <UserSecretsId>aspnet-TRMDataManager-d1e7cf44-7c3c-4552-832e-1d89f451d849</UserSecretsId>
+    <UserSecretsId>aspnet-TRMApi-d1e7cf44-7c3c-4552-832e-1d89f451d849</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>

@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace TRMDataManager.Data
+namespace TRMApi.Data
 {
     public class ApplicationDbContext : IdentityDbContext
     {
