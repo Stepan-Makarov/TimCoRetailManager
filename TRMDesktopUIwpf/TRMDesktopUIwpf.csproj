@@ -21,4 +21,12 @@
     </None>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Models\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TRMDesktopUILibrary\TRMDesktopUILibrary.csproj" />
+  </ItemGroup>
+
 </Project>

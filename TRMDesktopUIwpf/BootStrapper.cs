@@ -8,6 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using TRMDesktopUILibrary.Api;
+using TRMDesktopUILibrary.Models;
 using TRMDesktopUIwpf.Helpers;
 using TRMDesktopUIwpf.ViewModels;
 
@@ -43,7 +45,8 @@ namespace TRMDesktopUIwpf
             _container
                 .Singleton<IWindowManager, WindowManager>()
                 .Singleton<IEventAggregator, EventAggregator>()
-                .Singleton<IAPIHelper, APIHelper>();
+                .Singleton<IAPIHelper, APIHelper>()
+                .Singleton<ILoggedInUserModel, LoggedInUserModel>();
 
             _container.RegisterInstance(typeof(IConfiguration), "IConfiguration", AddConfiguration());
 

@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <Name>TRMDataDB</Name>
+    <Name>TRMSqlDataDB</Name>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectVersion>4.1</ProjectVersion>
     <ProjectGuid>{0a3087e7-b98e-465e-bd35-22df53ac58b1}</ProjectGuid>
@@ -71,6 +71,7 @@
     <Build Include="dbo\Tables\SalesDetails.sql" />
     <Build Include="dbo\Tables\Products.sql" />
     <Build Include="dbo\Tables\Inventory.sql" />
+    <Build Include="dbo\Stored Procedures\spUser_LookUp.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="TRMDataDB.refactorlog" />

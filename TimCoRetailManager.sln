@@ -5,9 +5,13 @@ VisualStudioVersion = 17.5.33530.505
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TRMDataManager", "TRMDataManager\TRMDataManager.csproj", "{DDA397FB-F7DC-439F-8E25-93269E3C86E9}"
 EndProject
-Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "TRMDataDB", "TRMDataDB\TRMDataDB.sqlproj", "{0A3087E7-B98E-465E-BD35-22DF53AC58B1}"
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "TRMSqlDataDB", "TRMDataDB\TRMSqlDataDB.sqlproj", "{0A3087E7-B98E-465E-BD35-22DF53AC58B1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TRMDesktopUIwpf", "TRMDesktopUIwpf\TRMDesktopUIwpf.csproj", "{12989475-E75F-47DE-AE7A-08D5E1364180}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TRMDesktopUIwpf", "TRMDesktopUIwpf\TRMDesktopUIwpf.csproj", "{12989475-E75F-47DE-AE7A-08D5E1364180}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TRMDataManagerLibrary", "TRMDataManagerLibrary\TRMDataManagerLibrary.csproj", "{256D847D-926F-425F-83A3-51AA70A1BE81}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TRMDesktopUILibrary", "TRMDesktopUILibrary\TRMDesktopUILibrary.csproj", "{2A254D0D-55C4-450B-B1DB-0D987D823796}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,6 +33,14 @@ Global
 		{12989475-E75F-47DE-AE7A-08D5E1364180}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{12989475-E75F-47DE-AE7A-08D5E1364180}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{12989475-E75F-47DE-AE7A-08D5E1364180}.Release|Any CPU.Build.0 = Release|Any CPU
+		{256D847D-926F-425F-83A3-51AA70A1BE81}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{256D847D-926F-425F-83A3-51AA70A1BE81}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{256D847D-926F-425F-83A3-51AA70A1BE81}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{256D847D-926F-425F-83A3-51AA70A1BE81}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2A254D0D-55C4-450B-B1DB-0D987D823796}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2A254D0D-55C4-450B-B1DB-0D987D823796}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2A254D0D-55C4-450B-B1DB-0D987D823796}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2A254D0D-55C4-450B-B1DB-0D987D823796}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

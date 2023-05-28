@@ -4,6 +4,8 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
 using TRMDataManager.Data;
+using TRMDataManagerLibrary.Data;
+using TRMDataManagerLibrary.Databases;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -47,7 +49,7 @@ builder.Services.AddSwaggerGen(setup =>
         new OpenApiSecurityScheme
         {
             In = ParameterLocation.Header,
-            Description = "Please enter a valid token",
+            Description = "Please enter a valid token by typing (Bearer Token)",
             Name = "Authorization",
             Type = SecuritySchemeType.ApiKey,
             BearerFormat = "JWT",
@@ -72,6 +74,9 @@ builder.Services.AddSwaggerGen(setup =>
             }
         });
 });
+
+builder.Services.AddTransient<IDataAccess, SqlDataAccess>();
+builder.Services.AddTransient<SqlData>();
 
 var app = builder.Build();
 
