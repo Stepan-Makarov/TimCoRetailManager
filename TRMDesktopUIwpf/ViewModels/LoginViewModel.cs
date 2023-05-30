@@ -5,19 +5,22 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TRMDesktopUILibrary.Api;
+using TRMDesktopUILibrary.Events;
 
 namespace TRMDesktopUIwpf.ViewModels
 {
     public class LoginViewModel : Screen
     {
-        public LoginViewModel(IAPIHelper apiHelper)
+        public LoginViewModel(IAPIHelper apiHelper, IEventAggregator events)
         {
             _apiHelper = apiHelper;
+            _events = events;
         }
 
         private string? _userName;
         private string? _password;
         private readonly IAPIHelper _apiHelper;
+        private readonly IEventAggregator _events;
 
         public string? UserName
 		{
@@ -94,6 +97,8 @@ namespace TRMDesktopUIwpf.ViewModels
                 var result = await _apiHelper.Authenticate(UserName, Password);
 
                 await _apiHelper.GetLoggedInUserInfo(result.Access_Token);
+
+                await _events.PublishOnUIThreadAsync(new LogOnEvent());
             }
             catch (Exception ex)
             {
