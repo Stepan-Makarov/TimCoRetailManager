@@ -24,5 +24,13 @@ namespace TRMDataManagerLibrary.Data
                                                         connectionStringName).FirstOrDefault();
             return output;
         }
+
+        public List<ProductModel> GetAllProducts()
+        {
+            var output = _db.LoadData<ProductModel, dynamic>("dbo.spProduct_GetAll",
+                                                        new { },
+                                                        connectionStringName);
+            return output;
+        }
     }
 }
