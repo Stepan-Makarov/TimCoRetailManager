@@ -33,7 +33,8 @@
         <!--Items column-->
         <TextBlock Grid.Row="1" Grid.Column="1" Text="Items" />
         <ListBox x:Name="Products" Grid.Row="2" Grid.Column="1"
-                 MinHeight="200" MinWidth="200">
+                 MinHeight="200" MinWidth="200"
+                 SelectedItem="{Binding SelectedProduct}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding ProductName}"/>
@@ -43,6 +44,11 @@
 
         <!--Quantity column-->
         <StackPanel Grid.Row="2" Grid.Column="2" Margin="20 10 20 5">
+            <!--Error message row-->
+            <TextBlock   x:Name="ErrorMessage" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"
+                     Visibility="{Binding IsErrorMessageVisible, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}"
+                     MaxWidth="400" Foreground="Red" Margin="0,0,0,20"
+                     TextWrapping="Wrap"/>
             <TextBlock Text="Quantity" />
             <TextBox x:Name="ItemQuantity" MinWidth="100" Margin="0 5 0 10" />
             <Button x:Name="AddToCart" Content="Add To Cart"
@@ -54,7 +60,13 @@
         <!--Cart column-->
         <TextBlock Grid.Row="1" Grid.Column="3" Text="Cart" />
         <ListBox x:Name="Cart" Grid.Row="2" Grid.Column="3"
-                 MinHeight="200" MinWidth="200" />
+                 MinHeight="200" MinWidth="200">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding DisplayProductData}"/>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
 
         <DockPanel Grid.Row="3" Grid.Column="3" Margin="0 0 0 10">
             <TextBlock Text="SubTotal: " />
