@@ -1,4 +1,5 @@
 ﻿using Caliburn.Micro;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -13,9 +14,12 @@ namespace TRMDesktopUIwpf.ViewModels
     public class SalesViewModel : Screen
     {
         private readonly IProductEndpoint _productEndpoint;
-        public SalesViewModel(IProductEndpoint productEndpoint)
+        private readonly IConfiguration _config;
+
+        public SalesViewModel(IProductEndpoint productEndpoint, IConfiguration config)
         {
             _productEndpoint = productEndpoint;
+            _config = config;
         }
 
         protected override async void OnViewLoaded(object view)
@@ -135,29 +139,44 @@ namespace TRMDesktopUIwpf.ViewModels
         {
             get 
             {
-                decimal subTotal = 0;
-
-                foreach (var item in Cart)
-                {
-                    subTotal += (item.Product.RetailPrice * item.QuantityInCart);
-                }
-                return subTotal.ToString("C");
+                return CalculateSubTotal().ToString("C");
             }
+        }
+
+        private decimal CalculateSubTotal()
+        {
+            decimal subTotal = 0;
+
+            foreach (var item in Cart)
+            {
+                subTotal += (item.Product.RetailPrice * item.QuantityInCart);
+            }
+            return subTotal;
+        }
+
+        private decimal CalculateTax()
+        {
+            decimal taxRate = _config.GetValue<decimal>("taxRate") / 100;
+            decimal taxAmount = 0;
+
+            taxAmount = Cart.Where(x => x.Product.IsTaxable).Sum(x => x.Product.RetailPrice * x.QuantityInCart * taxRate);
+
+            return taxAmount;
         }
         public string? Tax
         {
             get
             {
-                //Replace weth colculations
-                return "0.00 ₽";
+                return CalculateTax().ToString("C");
             }
         }
         public string? Total
         {
             get
             {
-                //Replace weth colculations
-                return "0.00 ₽";
+                decimal total = CalculateSubTotal() + CalculateTax();
+
+                return total.ToString("C");
             }
         }
 
@@ -211,6 +230,8 @@ namespace TRMDesktopUIwpf.ViewModels
             ItemQuantity = "1";
 
             NotifyOfPropertyChange(() => SubTotal);
+            NotifyOfPropertyChange(() => Tax);
+            NotifyOfPropertyChange(() => Total);
         }
 
         public bool CanRemoveFromCart
@@ -229,6 +250,8 @@ namespace TRMDesktopUIwpf.ViewModels
         {
             //Remove From Cart
             NotifyOfPropertyChange(() => SubTotal);
+            NotifyOfPropertyChange(() => Tax);
+            NotifyOfPropertyChange(() => Total);
         }
 
         public bool CanCheckOut
