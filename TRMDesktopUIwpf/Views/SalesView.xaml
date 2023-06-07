@@ -32,16 +32,32 @@
 
         <!--Items column-->
         <TextBlock Grid.Row="1" Grid.Column="1" Text="Items" />
-        <ListBox x:Name="Products" Grid.Row="2" Grid.Column="1"
-                 MinHeight="200" MinWidth="200"
-                 SelectedItem="{Binding SelectedProduct}">
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <TextBlock Text="{Binding ProductName}"/>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
-
+        <ScrollViewer Grid.Row="2" Grid.Column="1">
+            <ListBox x:Name="Products" Grid.Row="2" Grid.Column="1"
+                     MinHeight="200" MinWidth="200"
+                     MaxHeight="400"
+                     SelectedItem="{Binding SelectedProduct}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Vertical">
+                            <TextBlock Text="{Binding ProductName}"/>
+                            <StackPanel Orientation="Horizontal">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="Price" FontSize="14" Margin="0 0 5 0"/>
+                                    <TextBlock Text="{Binding RetailPrice, StringFormat={}C}"
+                                               FontSize="14"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="10 0 0 0">
+                                    <TextBlock Text="Quantity" FontSize="14" Margin="0 0 5 0"/>
+                                    <TextBlock Text="{Binding QuantityInStock}" FontSize="14"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </ScrollViewer>
+        
         <!--Quantity column-->
         <StackPanel Grid.Row="2" Grid.Column="2" Margin="20 10 20 5">
             <!--Error message row-->
@@ -59,15 +75,18 @@
 
         <!--Cart column-->
         <TextBlock Grid.Row="1" Grid.Column="3" Text="Cart" />
-        <ListBox x:Name="Cart" Grid.Row="2" Grid.Column="3"
-                 MinHeight="200" MinWidth="200">
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <TextBlock Text="{Binding DisplayProductData}"/>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
-
+        <ScrollViewer Grid.Row="2" Grid.Column="3">
+            <ListBox x:Name="Cart" Grid.Row="2" Grid.Column="3"
+                     MinHeight="200" MinWidth="200"
+                     MaxHeight="400">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding DisplayProductData}"/>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </ScrollViewer>
+        
         <DockPanel Grid.Row="3" Grid.Column="3" Margin="0 0 0 10">
             <TextBlock Text="SubTotal: " />
             <TextBlock x:Name="SubTotal" Text="0.00 ₽"
