@@ -8,4 +8,3 @@ begin
 	from dbo.Product
 	order by ProductName;
 end
-RETURN 0

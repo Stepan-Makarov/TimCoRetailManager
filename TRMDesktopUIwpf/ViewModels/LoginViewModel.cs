@@ -17,8 +17,8 @@ namespace TRMDesktopUIwpf.ViewModels
             _events = events;
         }
 
-        private string? _userName;
-        private string? _password;
+        private string? _userName = "Tom@mail.ru";
+        private string? _password = "Tom123456.";
         private readonly IAPIHelper _apiHelper;
         private readonly IEventAggregator _events;
 
