@@ -10,13 +10,5 @@ namespace TRMDesktopUILibrary.Models
     {
         public UIProductModel? Product { get; set; }
         public int QuantityInCart { get; set; }
-        public string? DisplayProductData
-        {
-            get 
-            { 
-                return $"{Product.ProductName} ({QuantityInCart})"; 
-            }
-        }
-
     }
 }

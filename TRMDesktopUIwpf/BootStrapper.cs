@@ -1,4 +1,5 @@
-﻿using Caliburn.Micro;
+﻿using AutoMapper;
+using Caliburn.Micro;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
@@ -11,6 +12,7 @@ using System.Windows.Controls;
 using TRMDesktopUILibrary.Api;
 using TRMDesktopUILibrary.Models;
 using TRMDesktopUIwpf.Helpers;
+using TRMDesktopUIwpf.Models;
 using TRMDesktopUIwpf.ViewModels;
 
 namespace TRMDesktopUIwpf
@@ -38,8 +40,23 @@ namespace TRMDesktopUIwpf
             return builder.Build();
         }
 
+        private IMapper configureAutoMapper()
+        {
+            var config = new MapperConfiguration(cnf =>
+            {
+                cnf.CreateMap<UIProductModel, ProductDisplayModel>();
+                cnf.CreateMap<CartItemModel, CartItemDisplayModel>();
+            });
+            
+            var mapper = config.CreateMapper();
+
+            return mapper;
+        }
+
         protected override void Configure()
         {
+            _container.Instance(configureAutoMapper());
+
             _container.Instance(_container)
                 .PerRequest<IProductEndpoint, ProductEndpoint>()
                 .PerRequest<ISaleEndPoint, SaleEndPoint>();
