@@ -43,7 +43,6 @@ namespace TRMDesktopUIwpf.ViewModels
         }
 
         private BindingList<ProductDisplayModel>? _products;
-
 		public BindingList<ProductDisplayModel>? Products
         {
 			get { return _products; }
@@ -54,12 +53,12 @@ namespace TRMDesktopUIwpf.ViewModels
             }
 		}
 
-        private ProductDisplayModel _selectedProduct;
-
-        public ProductDisplayModel SelectedProduct
+        
+        private ProductDisplayModel? _selectedProduct;
+        public ProductDisplayModel? SelectedProduct
         {
             get { return _selectedProduct; }
-            set 
+            set
             {
                 _selectedProduct = value;
                 NotifyOfPropertyChange(() => SelectedProduct);
@@ -67,8 +66,19 @@ namespace TRMDesktopUIwpf.ViewModels
             }
         }
 
-        private BindingList<CartItemDisplayModel> _cart = new BindingList<CartItemDisplayModel>();
+        private CartItemDisplayModel? _selectedCartItem;
+        public CartItemDisplayModel? SelectedCartItem
+        {
+            get { return _selectedCartItem; }
+            set
+            {
+                _selectedCartItem = value;
+                NotifyOfPropertyChange(() => SelectedCartItem);
+                NotifyOfPropertyChange(() => CanRemoveFromCart);
+            }
+        }
 
+        private BindingList<CartItemDisplayModel> _cart = new BindingList<CartItemDisplayModel>();
         public BindingList<CartItemDisplayModel> Cart
         {
             get { return _cart; }
@@ -88,6 +98,7 @@ namespace TRMDesktopUIwpf.ViewModels
                 _itemQuantity = value;
                 NotifyOfPropertyChange(() => ItemQuantity);
                 NotifyOfPropertyChange(() => CanAddToCart);
+                NotifyOfPropertyChange(() => CanRemoveFromCart);
                 NotifyOfPropertyChange(() => CanParseItemQuantityToInt);
             }
 		}
@@ -213,7 +224,7 @@ namespace TRMDesktopUIwpf.ViewModels
         
         public void AddToCart()
         {
-            CartItemDisplayModel existingItem = Cart.FirstOrDefault(x => x.Product == SelectedProduct);
+            CartItemDisplayModel? existingItem = Cart.FirstOrDefault(x => x.Product == SelectedProduct);
 
             if (existingItem != null)
             {
@@ -244,8 +255,11 @@ namespace TRMDesktopUIwpf.ViewModels
             get
             {
                 bool output = false;
-
-                //Something is checked
+                
+                if (CanParseItemQuantityToInt && ItemQuantityToInt > 0 && SelectedCartItem?.QuantityInCart > 0)
+                {
+                    output = true;
+                }
 
                 return output;
             }
@@ -254,6 +268,17 @@ namespace TRMDesktopUIwpf.ViewModels
         public void RemoveFromCart()
         {
             //Remove From Cart
+            if (SelectedCartItem.QuantityInCart > ItemQuantityToInt)
+            {
+                SelectedCartItem.QuantityInCart -= ItemQuantityToInt;
+                SelectedCartItem.Product.QuantityInStock += ItemQuantityToInt;
+            }
+            else
+            {
+                SelectedCartItem.Product.QuantityInStock += SelectedCartItem.QuantityInCart;
+                Cart.Remove(SelectedCartItem);
+            }
+
             NotifyOfPropertyChange(() => SubTotal);
             NotifyOfPropertyChange(() => Tax);
             NotifyOfPropertyChange(() => Total);
