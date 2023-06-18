@@ -42,6 +42,18 @@ namespace TRMDesktopUIwpf.ViewModels
             Products = new BindingList<ProductDisplayModel>(products);
         }
 
+        public async Task ResetSalesViewModel()
+        {
+            Cart = new BindingList<CartItemDisplayModel>();
+
+            await LoadProducts();
+
+            NotifyOfPropertyChange(() => SubTotal);
+            NotifyOfPropertyChange(() => Tax);
+            NotifyOfPropertyChange(() => Total);
+            NotifyOfPropertyChange(() => CanCheckOut);
+        }
+
         private BindingList<ProductDisplayModel>? _products;
 		public BindingList<ProductDisplayModel>? Products
         {
@@ -279,10 +291,13 @@ namespace TRMDesktopUIwpf.ViewModels
                 Cart.Remove(SelectedCartItem);
             }
 
+            ItemQuantity = "1";
+
             NotifyOfPropertyChange(() => SubTotal);
             NotifyOfPropertyChange(() => Tax);
             NotifyOfPropertyChange(() => Total);
             NotifyOfPropertyChange(() => CanCheckOut);
+            NotifyOfPropertyChange(() => CanAddToCart);
         }
 
         public bool CanCheckOut
@@ -316,6 +331,8 @@ namespace TRMDesktopUIwpf.ViewModels
             }
 
             await _saleEndPoint.PostSale(sale);
+
+            await ResetSalesViewModel();
         }
     }
 }
