@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace TRMDataManagerLibrary.Databases
 {
-    public class SqlDataAccess : IDataAccess
+    public class SqlDataAccess : IDataAccess, IDisposable
     {
         private readonly IConfiguration _config;
 
@@ -45,6 +45,72 @@ namespace TRMDataManagerLibrary.Databases
                 connection.Execute(sqlStatement, parameters,
                     commandType: CommandType.StoredProcedure);
             }
+        }
+
+        private IDbConnection? _connection;
+        private IDbTransaction? _transaction;
+        private bool isClosed;
+        
+        public void StartTransaction(string connectionStringName)
+        {
+            string? connectionString = _config.GetConnectionString(connectionStringName);
+
+            _connection = new SqlConnection(connectionString);
+            _connection.Open();
+
+            _transaction = _connection.BeginTransaction();
+
+            isClosed = false;
+        }
+
+        public List<T> LoadDataInTransaction<T, U>(string sqlStatement,
+                                                  U parameters)
+        {
+            List<T> rows = _connection.Query<T>(sqlStatement, parameters,
+                commandType: CommandType.StoredProcedure, transaction: _transaction).ToList();
+
+            return rows;
+        }
+
+        public void SaveDataInTransaction<T>(string sqlStatement,
+                                            T parameters)
+        {
+            _connection.Execute(sqlStatement, parameters,
+                commandType: CommandType.StoredProcedure, transaction: _transaction);
+        }
+
+        public void CommitTransaction()
+        {
+            _transaction.Commit();
+            _transaction.Dispose();
+
+            isClosed = true;
+        }
+
+        public void RollbackTransaction()
+        {
+            _transaction.Rollback();
+            _transaction.Dispose();
+
+            isClosed = true;
+        }
+
+        public void Dispose()
+        {
+            if (isClosed == false)
+            {
+                try
+                {
+                    CommitTransaction();
+                }
+                catch
+                {
+                    //Log Issue
+                }
+            }
+
+            _connection = null;
+            _transaction = null;
         }
     }
 }
