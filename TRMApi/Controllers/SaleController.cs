@@ -26,5 +26,15 @@ namespace TRMApi.Controllers
 
             _db.SaveSale(sale, userId);
         }
+
+        // GET: api/ProductController/GetSalesReport
+        [HttpGet]
+        [Route("GetSalesReport")]
+        public List<SaleReportModel> GetSalesReport()
+        {
+            var output = _db.GetSalesReport();
+
+            return output;
+        }
     }
 }

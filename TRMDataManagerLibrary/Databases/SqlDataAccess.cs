@@ -49,7 +49,7 @@ namespace TRMDataManagerLibrary.Databases
 
         private IDbConnection? _connection;
         private IDbTransaction? _transaction;
-        private bool isClosed;
+        private bool isClosed = false;
         
         public void StartTransaction(string connectionStringName)
         {
@@ -97,7 +97,7 @@ namespace TRMDataManagerLibrary.Databases
 
         public void Dispose()
         {
-            if (isClosed == false)
+            if (isClosed == false && _transaction != null)
             {
                 try
                 {

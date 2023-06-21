@@ -20,6 +20,7 @@ namespace TRMDataManagerLibrary.Data
             _db = db;
             _config = config;
         }
+
         public UserModel GetUserById(string Id)
         {
             var output =  _db.LoadData<UserModel, dynamic>("dbo.spUser_LookUp",
@@ -121,6 +122,32 @@ namespace TRMDataManagerLibrary.Data
                     throw;
                 }
             }
+        }
+
+        public List<SaleReportModel> GetSalesReport()
+        {
+            var output = _db.LoadData<SaleReportModel, dynamic>("dbo.spSale_SaleReport",
+                                                        new { },
+                                                        connectionStringName);
+            return output;
+        }
+
+        public List<InventoryModel> GetInventory()
+        {
+            var output = _db.LoadData<InventoryModel, dynamic>("dbo.spInventory_GetAll",
+                                                        new { },
+                                                        connectionStringName);
+            return output;
+        }
+
+        public void InsertInventory(InventoryModel item)
+        {
+            var insertedItem = new {ProductId = item.ProductId,
+                                    Quantity = item.Quantity,
+                                    PurchasePrice = item.PurchasePrice,
+                                    PurchaseDate = item.PurchaseDate};
+
+            _db.SaveData("dbo.spInventory_Insert", insertedItem, connectionStringName);
         }
     }
 }
