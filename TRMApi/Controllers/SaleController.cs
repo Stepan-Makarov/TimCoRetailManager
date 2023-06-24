@@ -20,6 +20,7 @@ namespace TRMApi.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Cashier")]
         public void PostSale(SaleModel sale)
         {
             string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -30,6 +31,7 @@ namespace TRMApi.Controllers
         // GET: api/ProductController/GetSalesReport
         [HttpGet]
         [Route("GetSalesReport")]
+        [Authorize(Roles = "Admin,Manager")]
         public List<SaleReportModel> GetSalesReport()
         {
             var output = _db.GetSalesReport();

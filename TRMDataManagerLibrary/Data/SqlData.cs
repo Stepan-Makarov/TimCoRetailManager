@@ -111,7 +111,7 @@ namespace TRMDataManagerLibrary.Data
                         detail.SaleId = sale.Id;
 
                         // Save Sale Detail Model to Data Base
-                        _db.SaveDataInTransaction("dbo.spSaleDetail_Insert", detail);
+                        sql.SaveDataInTransaction("dbo.spSaleDetail_Insert", detail);
                     }
 
                     sql.CommitTransaction();

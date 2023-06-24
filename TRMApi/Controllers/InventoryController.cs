@@ -21,6 +21,7 @@ namespace TRMApi.Controllers
 
         // GET: api/InventoryController
         [HttpGet]
+        [Authorize(Roles = "Admin,Manager")]
         public List<InventoryModel> Get()
         {
             var output = _db.GetInventory();
@@ -30,6 +31,7 @@ namespace TRMApi.Controllers
 
         // POST: api/InventoryController
         [HttpPost]
+        [Authorize(Roles = "Admin,Manager")]
         public void Post(InventoryModel item)
         {
             _db.InsertInventory(item);
