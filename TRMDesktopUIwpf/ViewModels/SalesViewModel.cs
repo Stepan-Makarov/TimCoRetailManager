@@ -3,10 +3,13 @@ using Caliburn.Micro;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.ComponentModel;
+using System.Dynamic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using TRMDesktopUILibrary.Api;
 using TRMDesktopUILibrary.Models;
 using TRMDesktopUIwpf.Models;
@@ -19,14 +22,18 @@ namespace TRMDesktopUIwpf.ViewModels
         private readonly ISaleEndPoint _saleEndPoint;
         private readonly IConfiguration _config;
         private readonly IMapper _mapper;
+        private readonly StatusInfoViewModel _status;
+        private readonly IWindowManager _window;
 
         public SalesViewModel(IProductEndpoint productEndpoint,ISaleEndPoint saleEndPoint, 
-            IConfiguration config, IMapper mapper)
+            IConfiguration config, IMapper mapper, StatusInfoViewModel status, IWindowManager window)
         {
             _productEndpoint = productEndpoint;
             _saleEndPoint = saleEndPoint;
             _config = config;
             _mapper = mapper;
+            _status = status;
+            _window = window;
         }
 
         protected override async void OnViewLoaded(object view)
@@ -115,19 +122,19 @@ namespace TRMDesktopUIwpf.ViewModels
             }
 		}
        
-        private string? _errorMessage;
+        private string? _itemErrorMessage;
 
-        public string? ErrorMessage
+        public string? ItemErrorMessage
         {
-            get { return _errorMessage; }
+            get { return _itemErrorMessage; }
             set
             {
-                _errorMessage = value;
-                NotifyOfPropertyChange(() => ErrorMessage);
-                NotifyOfPropertyChange(() => IsErrorMessageVisible);
+                _itemErrorMessage = value;
+                NotifyOfPropertyChange(() => ItemErrorMessage);
+                NotifyOfPropertyChange(() => IsItemErrorMessageVisible);
             }
         }
-        public bool IsErrorMessageVisible
+        public bool IsItemErrorMessageVisible
         {
             get
             {
@@ -215,10 +222,10 @@ namespace TRMDesktopUIwpf.ViewModels
         {
             get
             {
-                ErrorMessage = "";
+                ItemErrorMessage = "";
                 if (CanParseItemQuantityToInt == false)
                 {
-                    ErrorMessage = "Type a valid number";
+                    ItemErrorMessage = "Type a valid number";
                 }
 
                 bool output = false;
@@ -329,10 +336,31 @@ namespace TRMDesktopUIwpf.ViewModels
 
                 sale.SaleDetails.Add(detail);
             }
+            try
+            {
+                await _saleEndPoint.PostSale(sale);
 
-            await _saleEndPoint.PostSale(sale);
+                await ResetSalesViewModel();
+            }
+            catch (Exception ex)
+            {
+                dynamic settings = new ExpandoObject();
+                settings.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+                settings.ResizeMode = ResizeMode.NoResize;
+                settings.Title = "System Error";
 
-            await ResetSalesViewModel();
+                if (ex.Message == "Forbidden")
+                {
+                    _status.UpdateMessage("Unauthorized Access", "You do not have permission to do sales. It is job for cashiers");
+                    await _window.ShowDialogAsync(_status, null, settings);
+                }
+
+                else
+                {
+                    _status.UpdateMessage("Fatal Exception", ex.Message);
+                    await _window.ShowDialogAsync(_status, null, settings);
+                }
+            }
         }
     }
 }

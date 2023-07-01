@@ -61,8 +61,8 @@
         <!--Quantity column-->
         <StackPanel Grid.Row="2" Grid.Column="2" Margin="20 10 20 5">
             <!--Error message row-->
-            <TextBlock   x:Name="ErrorMessage" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"
-                     Visibility="{Binding IsErrorMessageVisible, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}"
+            <TextBlock   x:Name="ItemErrorMessage" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"
+                     Visibility="{Binding IsItemErrorMessageVisible, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}"
                      MaxWidth="400" Foreground="Red" Margin="0,0,0,20"
                      TextWrapping="Wrap"/>
             <TextBlock Text="Quantity" />
