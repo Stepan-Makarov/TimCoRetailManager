@@ -46,6 +46,7 @@ namespace TRMDesktopUIwpf
             {
                 cnf.CreateMap<UIProductModel, ProductDisplayModel>();
                 cnf.CreateMap<CartItemModel, CartItemDisplayModel>();
+                cnf.CreateMap<UserUIModel, UserDisplayModel>();
             });
             
             var mapper = config.CreateMapper();
@@ -59,6 +60,7 @@ namespace TRMDesktopUIwpf
 
             _container.Instance(_container)
                 .PerRequest<IProductEndpoint, ProductEndpoint>()
+                .PerRequest<IUserEndPoint, UserEndPoint>()
                 .PerRequest<ISaleEndPoint, SaleEndPoint>();
 
             _container
