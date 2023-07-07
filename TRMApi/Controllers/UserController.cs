@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -18,11 +19,13 @@ namespace TRMApi.Controllers
     {
         private readonly SqlData _db;
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public UserController(SqlData db, ApplicationDbContext context)
+        public UserController(SqlData db, ApplicationDbContext context, UserManager<IdentityUser> userManager)
         {
             _db = db;
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: api/<UserController>
@@ -36,10 +39,10 @@ namespace TRMApi.Controllers
             return output;
         }
 
-        // GET: api/<UserController>/Admin/GetAll
+        // GET: api/<UserController>/Admin/GetAllUsers
         [Authorize(Roles = "Admin")]
         [HttpGet]
-        [Route("Admin/GetAll")]
+        [Route("Admin/GetAllUsers")]
         public List<ApplicationUserModel> GetAllUsers()
         {
             List<ApplicationUserModel> output = new List<ApplicationUserModel>();
@@ -63,6 +66,54 @@ namespace TRMApi.Controllers
             }
 
             return output;
+        }
+
+        // GET: api/<UserController>/Admin/GetAllRoles
+        [Authorize(Roles = "Admin")]
+        [HttpGet]
+        [Route("Admin/GetAllRoles")]
+        public List<ApplicationRoleModel> GetAllRoles()
+        {
+            List<ApplicationRoleModel> output = new List<ApplicationRoleModel>();
+
+            var roles = _context.Roles.ToList();
+
+            foreach ( var role in roles )
+            {
+                ApplicationRoleModel r = new ApplicationRoleModel
+                {
+                    Id = role.Id,
+                    Name = role.Name,
+                    NormalizedName = role.NormalizedName,
+                    ConcurrencyStamp = role.ConcurrencyStamp
+                };
+
+                output.Add(r);
+            }
+
+            return output;
+        }
+
+        // POST: api/<UserController>/Admin/PostRole
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        [Route("Admin/PostRole")]
+        public async Task PostRole(UserRolePairModel pair)
+        {
+            var user = await _context.Users.FindAsync(pair.UserId);
+
+            await _userManager.AddToRoleAsync(user, pair.Name);
+        }
+
+        // POST: api/<UserController>/Admin/RemoveRole
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        [Route("Admin/RemoveRole")]
+        public async Task RemoveRole(UserRolePairModel pair)
+        {
+            var user = await _context.Users.FindAsync(pair.UserId);
+
+            await _userManager.RemoveFromRoleAsync(user, pair.Name);
         }
     }
 }
