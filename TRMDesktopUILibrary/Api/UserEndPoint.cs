@@ -19,7 +19,7 @@ namespace TRMDesktopUILibrary.Api
 
         public async Task<List<UserUIModel>> GetAllUsers()
         {
-            using (HttpResponseMessage response = await _apiHelper.ApiClient.GetAsync("/api/User/Admin/GetAll"))
+            using (HttpResponseMessage response = await _apiHelper.ApiClient.GetAsync("/api/User/Admin/GetAllUsers"))
             {
                 if (response.IsSuccessStatusCode)
                 {
@@ -34,18 +34,45 @@ namespace TRMDesktopUILibrary.Api
                 }
             }
         }
-        public async Task<List<UIProductModel>> GetAllProducts()
+
+        public async Task<List<RoleUIModel>> GetAllRoles()
         {
-            using (HttpResponseMessage response = await _apiHelper.ApiClient.GetAsync("/api/Product"))
+            using (HttpResponseMessage response = await _apiHelper.ApiClient.GetAsync("/api/User/Admin/GetAllRoles"))
             {
                 if (response.IsSuccessStatusCode)
                 {
-                    var result = await response.Content.ReadAsAsync<List<UIProductModel>>();
+                    var result = await response.Content.ReadAsAsync<List<RoleUIModel>>();
 
                     return result;
                 }
 
                 else
+                {
+                    throw new Exception(response.ReasonPhrase);
+                }
+            }
+        }
+
+        public async Task AddUserToRole(string userId, string roleName)
+        {
+            var data = new { userId, roleName };
+
+            using (HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("/api/User/Admin/AddRole", data))
+            {
+                if (response.IsSuccessStatusCode == false)
+                {
+                    throw new Exception(response.ReasonPhrase);
+                }
+            }
+        }
+
+        public async Task RemoveUserFromRole(string userId, string roleName)
+        {
+            var data = new { userId, roleName };
+
+            using (HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync("/api/User/Admin/RemoveRole", data))
+            {
+                if (response.IsSuccessStatusCode == false)
                 {
                     throw new Exception(response.ReasonPhrase);
                 }

@@ -95,25 +95,27 @@ namespace TRMApi.Controllers
         }
 
         // POST: api/<UserController>/Admin/PostRole
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
+        [AllowAnonymous]
         [HttpPost]
-        [Route("Admin/PostRole")]
-        public async Task PostRole(UserRolePairModel pair)
+        [Route("Admin/AddRole")]
+        public async Task AddRole(UserRolePairModel pair)
         {
             var user = await _context.Users.FindAsync(pair.UserId);
 
-            await _userManager.AddToRoleAsync(user, pair.Name);
+            await _userManager.AddToRoleAsync(user, pair.RoleName);
         }
 
         // POST: api/<UserController>/Admin/RemoveRole
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
+        [AllowAnonymous]
         [HttpPost]
         [Route("Admin/RemoveRole")]
         public async Task RemoveRole(UserRolePairModel pair)
         {
             var user = await _context.Users.FindAsync(pair.UserId);
 
-            await _userManager.RemoveFromRoleAsync(user, pair.Name);
+            await _userManager.RemoveFromRoleAsync(user, pair.RoleName);
         }
     }
 }

@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using TRMDesktopUILibrary.Api;
+using TRMDesktopUILibrary.Models;
 using TRMDesktopUIwpf.Models;
 
 namespace TRMDesktopUIwpf.ViewModels
@@ -21,22 +22,6 @@ namespace TRMDesktopUIwpf.ViewModels
         private readonly IMapper _mapper;
         private readonly StatusInfoViewModel _status;
         private readonly IWindowManager _window;
-
-        private BindingList<UserDisplayModel>? _users;
-
-        public BindingList<UserDisplayModel>? Users
-        {
-            get
-            {
-                return _users;
-            }
-            set
-            {
-                _users = value; 
-                NotifyOfPropertyChange(() => Users);
-            }
-        }
-
 
         public UserDisplayViewModel(IUserEndPoint userEndpoint, IConfiguration config, IMapper mapper, 
                                     StatusInfoViewModel status, IWindowManager window)
@@ -84,6 +69,144 @@ namespace TRMDesktopUIwpf.ViewModels
             var userList = await _userEndpoint.GetAllUsers();
             var users = _mapper.Map<List<UserDisplayModel>>(userList);
             Users = new BindingList<UserDisplayModel>(users);
+        }
+
+        private BindingList<UserDisplayModel>? _users = new BindingList<UserDisplayModel>();
+        public BindingList<UserDisplayModel>? Users
+        {
+            get
+            {
+                return _users;
+            }
+            set
+            {
+                _users = value;
+                NotifyOfPropertyChange(() => Users);
+            }
+        }
+
+        private UserDisplayModel? _selectedUser;
+        public UserDisplayModel? SelectedUser
+        {
+            get 
+            { 
+                return _selectedUser;
+            }
+            set
+            {
+                _selectedUser = value;
+                UserRoles?.Clear();
+                DisplayRoleNames();
+                LoadRoles();
+                NotifyOfPropertyChange(() => SelectedUser);
+            }
+        }
+
+
+        private BindingList<RoleUIModel>? _userRoles = new BindingList<RoleUIModel>();
+        public BindingList<RoleUIModel>? UserRoles
+        {
+            get
+            {
+                return _userRoles;
+            }
+            set
+            {
+                _userRoles = value;
+                NotifyOfPropertyChange(() => UserRoles);
+            }
+        }
+
+        private BindingList<RoleUIModel>? _avaliableRoles = new BindingList<RoleUIModel>();
+        public BindingList<RoleUIModel>? AvaliableRoles
+        {
+            get
+            {
+                return _avaliableRoles;
+            }
+            set
+            {
+                _avaliableRoles = value;
+                NotifyOfPropertyChange(() => AvaliableRoles);
+            }
+        }
+
+        private RoleUIModel? _selectedUserRole;
+        public RoleUIModel? SelectedUserRole
+        {
+            get
+            {
+                return _selectedUserRole;
+            }
+            set
+            {
+                _selectedUserRole = value;
+                NotifyOfPropertyChange(() => SelectedUserRole);
+            }
+        }
+
+        private RoleUIModel? _selectedAvaliableRole;
+        public RoleUIModel? SelectedAvaliableRole
+        {
+            get
+            {
+                return _selectedAvaliableRole;
+            }
+            set
+            {
+                _selectedAvaliableRole = value;
+                NotifyOfPropertyChange(() => SelectedAvaliableRole);
+            }
+        }
+
+        private BindingList<RoleUIModel>? DisplayRoleNames()
+        {
+            if (SelectedUser != null)
+            {
+                foreach (var role in SelectedUser.Roles)
+                {
+                    RoleUIModel? Role = new RoleUIModel
+                    {
+                        Id = role.Key,
+                        Name = role.Value
+                    };
+
+                    UserRoles?.Add(Role);
+                }
+            }
+
+            return UserRoles;
+        }
+
+        private async Task LoadRoles()
+        {
+            var roles = await _userEndpoint.GetAllRoles();
+
+            foreach (var role in roles)
+            {
+                List<string>? roleNames = UserRoles.Select(x => x.Name).ToList();
+
+                if (roleNames.Contains(role.Name) == false)
+                {
+                    AvaliableRoles?.Add(role);
+                }
+            }
+        }
+
+        public async Task RemoveRole()
+        {
+            await _userEndpoint.RemoveUserFromRole(SelectedUser.Id, SelectedUserRole.Name);
+
+            AvaliableRoles?.Add(SelectedUserRole);
+            UserRoles?.Remove(SelectedUserRole);
+        }
+
+        public async Task AddRole()
+        {
+            await _userEndpoint.AddUserToRole(SelectedUser.Id, SelectedAvaliableRole.Name);
+
+            UserRoles?.Add(SelectedAvaliableRole);
+            AvaliableRoles?.Remove(SelectedAvaliableRole);
         }
     }
 }

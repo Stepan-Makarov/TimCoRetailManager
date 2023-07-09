@@ -22,6 +22,7 @@
             <ColumnDefinition Width="auto" />
             <ColumnDefinition Width="auto" />
             <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
         <!--Header-->
@@ -34,7 +35,8 @@
         <ScrollViewer Grid.Row="2" Grid.Column="1">
             <ListBox x:Name="Users" Grid.Row="2" Grid.Column="1"
                      MinHeight="400" MinWidth="400"
-                     MaxHeight="400" MaxWidth="600">
+                     MaxHeight="400" MaxWidth="600"
+                     SelectedItem="{Binding SelectedUser}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Vertical">
@@ -45,5 +47,40 @@
                 </ListBox.ItemTemplate>
             </ListBox>
         </ScrollViewer>
+
+        <!--Roles column-->
+        <StackPanel Orientation="Vertical" Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="2"
+                    Margin="20,0,0,0">
+            <TextBlock MinWidth="40" MinHeight="10"
+                       Text="{Binding SelectedUser.Email}"/>
+            <TextBlock Text="Curent roles" />
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                <ListBox x:Name="UserRoles" Grid.Row="2" Grid.Column="1"
+                         MinHeight="10" MinWidth="40"
+                         SelectedItem="{Binding SelectedUserRole}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Vertical">
+                                <TextBlock Text="{Binding Name}" FontSize="18" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+                <Button x:Name="RemoveRole" Content="Remove" Margin="5" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                <ComboBox x:Name="AvaliableRoles" Grid.Row="3" Grid.Column="1"
+                          SelectedItem="{Binding SelectedAvaliableRole}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Vertical">
+                                <TextBlock Text="{Binding Name}" FontSize="18" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+                <Button x:Name="AddRole" Content="Add" Margin="5" />
+            </StackPanel>
+        </StackPanel>
     </Grid>
 </UserControl>
