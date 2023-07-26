@@ -12,19 +12,19 @@ using TRMDesktopUILibrary.Models;
 
 namespace TRMDesktopUIwpf.ViewModels
 {
-    public class ShellViewModel : Conductor<object>, IHandle<LogOnEvent>
+    public class ShellViewModel : Conductor<object>, IHandle<LogOnEvent>, IHandle<SalesViewEvent>
     {
         private readonly IEventAggregator _events;
-        private readonly SalesViewModel _salesVM;
         private readonly ILoggedInUserModel _user;
         private readonly IAPIHelper _apiHelper;
         private readonly UserUIModel _userEF;
 
-        public ShellViewModel(IEventAggregator events, SalesViewModel salesVM, ILoggedInUserModel user, IAPIHelper apiHelper,
+        public ShellViewModel(IEventAggregator events,
+                              ILoggedInUserModel user,
+                              IAPIHelper apiHelper,
                               UserUIModel userEF)
         {
             _events = events;
-            _salesVM = salesVM;
             _user = user;
             _apiHelper = apiHelper;
             _userEF = userEF;
@@ -54,9 +54,14 @@ namespace TRMDesktopUIwpf.ViewModels
 
         public async Task HandleAsync(LogOnEvent message, CancellationToken cancellationToken)
         {
-            await ActivateItemAsync(_salesVM);
+            await ActivateItemAsync(IoC.Get<SalesViewModel>());
 
             NotifyOfPropertyChange(() => IsLogIn);
+        }
+
+        public async Task HandleAsync(SalesViewEvent message, CancellationToken cancellationToken)
+        {
+            await ActivateItemAsync(IoC.Get<SalesViewModel>());
         }
 
         public bool IsLogIn

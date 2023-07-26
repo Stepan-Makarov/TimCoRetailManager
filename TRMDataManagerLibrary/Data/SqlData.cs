@@ -89,38 +89,35 @@ namespace TRMDataManagerLibrary.Data
 
             sale.Total = sale.SubTotal + sale.Tax;
 
-            // Should be a better way (Make IDataAccess IDisposable and use _db???)
-            using(SqlDataAccess sql = new SqlDataAccess(_config))
+            // Should be a better way 
+            try
             {
-                try
+                _db.StartTransaction(connectionStringName);
+
+                // Save Sale information to Data base
+                _db.SaveDataInTransaction("dbo.spSale_Insert",
+                        new { sale.CashierId, sale.SaleDate, sale.SubTotal, sale.Tax, sale.Total });
+
+                // Load Sale Id for Sale Details
+                sale.Id = _db.LoadDataInTransaction<int, dynamic>("dbo.spSale_GetId",
+                                        new { CashierId = sale.CashierId, SaleDate = sale.SaleDate })
+                                        .FirstOrDefault();
+
+                // Add Sale Id for each Sale Detail Model
+                foreach (var detail in details)
                 {
-                    sql.StartTransaction(connectionStringName);
+                    detail.SaleId = sale.Id;
 
-                    // Save Sale information to Data base
-                    sql.SaveDataInTransaction("dbo.spSale_Insert",
-                            new { sale.CashierId, sale.SaleDate, sale.SubTotal, sale.Tax, sale.Total });
-
-                    // Load Sale Id for Sale Details
-                    sale.Id = sql.LoadDataInTransaction<int, dynamic>("dbo.spSale_GetId",
-                                           new { CashierId = sale.CashierId, SaleDate = sale.SaleDate })
-                                           .FirstOrDefault();
-
-                    // Add Sale Id for each Sale Detail Model
-                    foreach (var detail in details)
-                    {
-                        detail.SaleId = sale.Id;
-
-                        // Save Sale Detail Model to Data Base
-                        sql.SaveDataInTransaction("dbo.spSaleDetail_Insert", detail);
-                    }
-
-                    sql.CommitTransaction();
+                    // Save Sale Detail Model to Data Base
+                    _db.SaveDataInTransaction("dbo.spSaleDetail_Insert", detail);
                 }
-                catch
-                {
-                    sql.RollbackTransaction();
-                    throw;
-                }
+
+                _db.CommitTransaction();
+            }
+            catch
+            {
+                _db.RollbackTransaction();
+                throw;
             }
         }
 

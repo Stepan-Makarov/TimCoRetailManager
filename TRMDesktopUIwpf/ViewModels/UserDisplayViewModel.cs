@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using TRMDesktopUILibrary.Api;
+using TRMDesktopUILibrary.Events;
 using TRMDesktopUILibrary.Models;
 using TRMDesktopUIwpf.Models;
 
@@ -22,15 +23,18 @@ namespace TRMDesktopUIwpf.ViewModels
         private readonly IMapper _mapper;
         private readonly StatusInfoViewModel _status;
         private readonly IWindowManager _window;
+        private readonly IEventAggregator _events;
 
         public UserDisplayViewModel(IUserEndPoint userEndpoint, IConfiguration config, IMapper mapper, 
-                                    StatusInfoViewModel status, IWindowManager window)
+                                    StatusInfoViewModel status, IWindowManager window,
+                                    IEventAggregator events)
         {
             _userEndpoint = userEndpoint;
             _config = config;
             _mapper = mapper;
             _status = status;
             _window = window;
+            _events = events;
         }
 
         protected override async void OnViewLoaded(object view)
@@ -60,6 +64,7 @@ namespace TRMDesktopUIwpf.ViewModels
                     await _window.ShowDialogAsync(_status, null, settings);
                 }
 
+                await _events.PublishOnUIThreadAsync(new SalesViewEvent());
                 await TryCloseAsync();
             }
         }
