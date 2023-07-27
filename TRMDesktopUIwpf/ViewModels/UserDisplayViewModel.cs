@@ -185,6 +185,8 @@ namespace TRMDesktopUIwpf.ViewModels
 
         private async Task LoadRoles()
         {
+            AvaliableRoles?.Clear();
+
             var roles = await _userEndpoint.GetAllRoles();
 
             foreach (var role in roles)
@@ -202,16 +204,28 @@ namespace TRMDesktopUIwpf.ViewModels
         {
             await _userEndpoint.RemoveUserFromRole(SelectedUser.Id, SelectedUserRole.Name);
 
+            var roleToDelete = SelectedUser.Roles.FirstOrDefault(x => x.Value == SelectedUserRole.Name);
+            SelectedUser.Roles.Remove(roleToDelete.Key);
+
             AvaliableRoles?.Add(SelectedUserRole);
             UserRoles?.Remove(SelectedUserRole);
+
+
+            NotifyOfPropertyChange(() => Users);
+            //NotifyOfPropertyChange(() => AvaliableRoles);
         }
 
         public async Task AddRole()
         {
             await _userEndpoint.AddUserToRole(SelectedUser.Id, SelectedAvaliableRole.Name);
 
+            SelectedUser.Roles.Add(SelectedAvaliableRole.Id, SelectedAvaliableRole.Name);
+
             UserRoles?.Add(SelectedAvaliableRole);
             AvaliableRoles?.Remove(SelectedAvaliableRole);
+
+            NotifyOfPropertyChange(() => Users);
+            //NotifyOfPropertyChange(() => AvaliableRoles);
         }
     }
 }

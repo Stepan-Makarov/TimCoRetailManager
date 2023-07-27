@@ -41,7 +41,9 @@
                     <DataTemplate>
                         <StackPanel Orientation="Vertical">
                             <TextBlock Text="{Binding Email}" FontSize="20" FontWeight="Bold" />
-                            <TextBlock Text="{Binding RoleList}" FontSize="16" />
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding RoleList}" FontSize="16" />
+                            </StackPanel>                           
                         </StackPanel>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
