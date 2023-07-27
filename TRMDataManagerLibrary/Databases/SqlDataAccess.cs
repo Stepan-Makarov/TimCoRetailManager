@@ -1,5 +1,6 @@
 ﻿using Dapper;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -13,10 +14,12 @@ namespace TRMDataManagerLibrary.Databases
     public class SqlDataAccess : IDataAccess, IDisposable
     {
         private readonly IConfiguration _config;
+        private readonly ILogger<SqlDataAccess> _logger;
 
-        public SqlDataAccess(IConfiguration config)
+        public SqlDataAccess(IConfiguration config, ILogger<SqlDataAccess> logger)
         {
             _config = config;
+            _logger = logger;
         }
 
         public List<T> LoadData<T, U>(string sqlStatement,
@@ -103,9 +106,9 @@ namespace TRMDataManagerLibrary.Databases
                 {
                     CommitTransaction();
                 }
-                catch
+                catch (Exception ex)
                 {
-                    //Log Issue
+                    _logger.LogError(ex, "Commit transaction failed in the Dispose method");
                 }
             }
 

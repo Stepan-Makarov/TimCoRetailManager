@@ -20,12 +20,14 @@ namespace TRMApi.Controllers
         private readonly SqlData _db;
         private readonly ApplicationDbContext _context;
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly ILogger<UserController> _logger;
 
-        public UserController(SqlData db, ApplicationDbContext context, UserManager<IdentityUser> userManager)
+        public UserController(SqlData db, ApplicationDbContext context, UserManager<IdentityUser> userManager, ILogger<UserController> logger)
         {
             _db = db;
             _context = context;
             _userManager = userManager;
+            _logger = logger;
         }
 
         // GET: api/<UserController>
@@ -101,7 +103,12 @@ namespace TRMApi.Controllers
         [Route("Admin/AddRole")]
         public async Task AddRole(UserRolePairModel pair)
         {
+            string? loggedInUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
             var user = await _context.Users.FindAsync(pair.UserId);
+
+            _logger.LogInformation("Admin {Admin} added user {User} to role {Role}",
+                            loggedInUserId, user.Id, pair.RoleName);
 
             await _userManager.AddToRoleAsync(user, pair.RoleName);
         }
@@ -113,7 +120,12 @@ namespace TRMApi.Controllers
         [Route("Admin/RemoveRole")]
         public async Task RemoveRole(UserRolePairModel pair)
         {
+            string? loggedInUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
             var user = await _context.Users.FindAsync(pair.UserId);
+
+            _logger.LogInformation("Admin {Admin} remove user {User} from role {Role}",
+                            loggedInUserId, user.Id, pair.RoleName);
 
             await _userManager.RemoveFromRoleAsync(user, pair.RoleName);
         }
