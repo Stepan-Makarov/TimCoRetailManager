@@ -50,6 +50,12 @@ namespace TRMDesktopUIwpf.ViewModels
             await ActivateItemAsync(IoC.Get<LoginViewModel>());
 
             NotifyOfPropertyChange(() => IsLogIn);
+            NotifyOfPropertyChange(() => IsLogOut);
+        }
+
+        public async Task LogIn()
+        {
+            await ActivateItemAsync(IoC.Get<LoginViewModel>());
         }
 
         public async Task HandleAsync(LogOnEvent message, CancellationToken cancellationToken)
@@ -57,6 +63,7 @@ namespace TRMDesktopUIwpf.ViewModels
             await ActivateItemAsync(IoC.Get<SalesViewModel>());
 
             NotifyOfPropertyChange(() => IsLogIn);
+            NotifyOfPropertyChange(() => IsLogOut);
         }
 
         public async Task HandleAsync(SalesViewEvent message, CancellationToken cancellationToken)
@@ -77,6 +84,14 @@ namespace TRMDesktopUIwpf.ViewModels
 
                 return output;
             }
-        }       
+        }
+
+        public bool IsLogOut
+        {
+            get
+            {
+                return !IsLogIn;
+            }
+        }
     }
 }
