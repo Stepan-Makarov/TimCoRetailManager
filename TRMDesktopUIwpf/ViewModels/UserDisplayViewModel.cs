@@ -147,6 +147,7 @@ namespace TRMDesktopUIwpf.ViewModels
             {
                 _selectedUserRole = value;
                 NotifyOfPropertyChange(() => SelectedUserRole);
+                NotifyOfPropertyChange(() => CanRemoveRole);
             }
         }
 
@@ -161,6 +162,7 @@ namespace TRMDesktopUIwpf.ViewModels
             {
                 _selectedAvaliableRole = value;
                 NotifyOfPropertyChange(() => SelectedAvaliableRole);
+                NotifyOfPropertyChange(() => CanAddRole);
             }
         }
 
@@ -200,6 +202,21 @@ namespace TRMDesktopUIwpf.ViewModels
             }
         }
 
+        public bool CanRemoveRole
+        {
+            get
+            {
+                bool output = false;
+
+                if (SelectedUserRole != null && SelectedUser != null)
+                {
+                    output = true;
+                }
+
+                return output;
+            }
+        }
+
         public async Task RemoveRole()
         {
             await _userEndpoint.RemoveUserFromRole(SelectedUser.Id, SelectedUserRole.Name);
@@ -213,6 +230,21 @@ namespace TRMDesktopUIwpf.ViewModels
 
             NotifyOfPropertyChange(() => Users);
             //NotifyOfPropertyChange(() => AvaliableRoles);
+        }
+
+        public bool CanAddRole
+        {
+            get
+            {
+                bool output = false;
+
+                if (SelectedAvaliableRole != null && SelectedUser != null)
+                {
+                    output = true;
+                }
+
+                return output;
+            }
         }
 
         public async Task AddRole()
