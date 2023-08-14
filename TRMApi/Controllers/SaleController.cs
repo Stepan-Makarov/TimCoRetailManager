@@ -27,13 +27,24 @@ namespace TRMApi.Controllers
             _db.SaveSale(sale, userId);
         }
 
-        // GET: api/ProductController/GetSalesReport
+        // GET: api/Sale/GetSalesReport
         [HttpGet]
         [Route("GetSalesReport")]
         [Authorize(Roles = "Admin,Manager")]
         public List<SaleReportModel> GetSalesReport()
         {
             var output = _db.GetSalesReport();
+
+            return output;
+        }
+
+        // GET: api/Sale/GetTaxRate
+        [HttpGet]
+        [Route("GetTaxRate")]
+        [AllowAnonymous]
+        public decimal GetTaxRate()
+        {
+            var output = _db.GetTaxRate();
 
             return output;
         }

@@ -45,6 +45,25 @@ namespace TRMDataManagerLibrary.Data
             return output;
         }
 
+        public decimal GetTaxRate()
+        {
+            decimal taxRate = 0;
+
+            try
+            {
+                taxRate = _config.GetValue<decimal>("TaxRate");
+            }
+            catch (Exception)
+            {
+
+                throw new Exception("The tax rate is not set up properly");
+            }
+
+            decimal output = taxRate / 100;
+
+            return output;
+        }
+
         public void SaveSale(SaleModel? saleInfo, string? cashierId)
         {
             //ToDo Make it SOLID
@@ -69,7 +88,7 @@ namespace TRMDataManagerLibrary.Data
 
                 detail.PurchasePrice = productInfo.RetailPrice * detail.Quantity;
 
-                decimal taxRate = _config.GetValue<decimal>("taxRate") / 100;
+                decimal taxRate = GetTaxRate();
 
                 if (productInfo.IsTaxable)
                 {

@@ -31,5 +31,23 @@ namespace TRMDesktopUILibrary.Api
                 }
             }
         }
+
+        public async Task<decimal> GetTaxRate()
+        {
+            using (HttpResponseMessage response = await _apiHelper.ApiClient.GetAsync("/api/Sale/GetTaxRate"))
+            {
+                if (response.IsSuccessStatusCode)
+                {
+                    var result = await response.Content.ReadAsAsync<decimal>();
+
+                    return result;
+                }
+
+                else
+                {
+                    throw new Exception(response.ReasonPhrase);
+                }
+            }
+        }
     }
 }
