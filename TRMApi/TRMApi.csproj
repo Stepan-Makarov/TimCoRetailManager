@@ -26,4 +26,8 @@
     <ProjectReference Include="..\TRMDataManagerLibrary\TRMDataManagerLibrary.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Views\CreateRoles\" />
+  </ItemGroup>
+
 </Project>
