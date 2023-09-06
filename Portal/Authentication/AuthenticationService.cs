@@ -1,4 +1,5 @@
 ﻿using Blazored.LocalStorage;
+using Microsoft.AspNetCore.Components.Authorization;
 using Portal.Models;
 using System.Net.Http.Headers;
 using System.Security.Cryptography.X509Certificates;
@@ -9,11 +10,11 @@ namespace Portal.Authentication
     public class AuthenticationService : IAuthenticationService
     {
         private readonly HttpClient _client;
-        private readonly AuthStateProvider _authStateProvider;
+        private readonly AuthenticationStateProvider _authStateProvider;
         private readonly ILocalStorageService _localStorage;
 
         public AuthenticationService(HttpClient client,
-                                     AuthStateProvider authStateProvider,
+                                     AuthenticationStateProvider authStateProvider,
                                      ILocalStorageService localStorage)
         {
             _client = client;
@@ -42,7 +43,7 @@ namespace Portal.Authentication
 
                 await _localStorage.SetItemAsync("authToken", result.Access_Token);
 
-                _authStateProvider.NotifyUserAuthentication(result.Access_Token);
+                ((AuthStateProvider)_authStateProvider).NotifyUserAuthentication(result.Access_Token);
 
                 _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", result.Access_Token);
 
@@ -59,7 +60,7 @@ namespace Portal.Authentication
         public async Task Logout()
         {
             await _localStorage.RemoveItemAsync("authToken");
-            _authStateProvider.NotifyUserLogout();
+            ((AuthStateProvider)_authStateProvider).NotifyUserLogout();
             _client.DefaultRequestHeaders.Authorization = null;
         }
     }
