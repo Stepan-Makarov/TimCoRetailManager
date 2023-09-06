@@ -1,9 +1,10 @@
 ﻿using Blazored.LocalStorage;
+using Portal.Models;
 using System.Net.Http.Headers;
 using System.Security.Cryptography.X509Certificates;
 using System.Text.Json;
 
-namespace Portal.Models
+namespace Portal.Authentication
 {
     public class AuthenticationService : IAuthenticationService
     {

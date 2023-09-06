@@ -1,10 +1,9 @@
 ﻿using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
-using Portal.Authentication;
 using System.Net.Http.Headers;
 using System.Security.Claims;
 
-namespace Portal
+namespace Portal.Authentication
 {
     public class AuthStateProvider : AuthenticationStateProvider
     {

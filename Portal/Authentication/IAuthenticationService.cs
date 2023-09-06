@@ -1,4 +1,6 @@
-﻿namespace Portal.Models
+﻿using Portal.Models;
+
+namespace Portal.Authentication
 {
     public interface IAuthenticationService
     {
