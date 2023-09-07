@@ -10,6 +10,14 @@ using TRMDataManagerLibrary.Databases;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddCors(policy =>
+{
+    policy.AddPolicy("OpenCorsPolicy", opt =>
+        opt.AllowAnyOrigin()
+        .AllowAnyHeader()
+        .AllowAnyMethod());
+});
+
 var connectionString = builder.Configuration.GetConnectionString("EFData") ?? throw new InvalidOperationException("Connection string 'EFData' not found.");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
@@ -94,6 +102,7 @@ else
 }
 
 app.UseHttpsRedirection();
+app.UseCors("OpenCorsPolicy");
 app.UseStaticFiles();
 
 app.UseRouting();
