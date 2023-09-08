@@ -31,8 +31,7 @@ namespace Portal.Authentication
                 new KeyValuePair<string, string>("password", userForAuthentication.Password)
             });
 
-            _client.BaseAddress = new Uri("https://localhost:7296");
-            HttpResponseMessage? authResult = await _client.PostAsync("/token", data);
+            HttpResponseMessage? authResult = await _client.PostAsync("https://localhost:7296/token", data);
 
             if (authResult.IsSuccessStatusCode)
             {
