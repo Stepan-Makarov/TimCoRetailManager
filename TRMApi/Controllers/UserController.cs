@@ -41,6 +41,48 @@ namespace TRMApi.Controllers
             return output;
         }
 
+        // POST: api/<UserController>/Register
+        [HttpPost]
+        [AllowAnonymous]
+        [Route("Register")]
+        public async Task<IActionResult> Register(UserRegistrationModel user) 
+        { 
+            if (ModelState.IsValid)
+            {
+                var existingUser = await _userManager.FindByEmailAsync(user.EmailAddress);
+
+                if (existingUser == null)
+                {
+                    IdentityUser newUser = new IdentityUser
+                    {
+                        Email = user.EmailAddress,
+                        EmailConfirmed = true,
+                        UserName = user.EmailAddress
+                    };
+
+                    IdentityResult result = await _userManager.CreateAsync(newUser, user.Password);
+
+                    if (result.Succeeded)
+                    {
+                        existingUser = await _userManager.FindByEmailAsync(user.EmailAddress);
+
+                        UserModel u = new()
+                        {
+                            Id = existingUser.Id,
+                            FirstName = user.FirstName,
+                            LastName = user.LastName,
+                            EmailAddress = user.EmailAddress
+                        };
+
+                        _db.CreateUser(u);
+                        return Ok();
+                    }
+                    
+                }
+            }
+            return BadRequest();
+        }
+
         // GET: api/<UserController>/Admin/GetAllUsers
         [Authorize(Roles = "Admin")]
         [HttpGet]
@@ -97,8 +139,7 @@ namespace TRMApi.Controllers
         }
 
         // POST: api/<UserController>/Admin/PostRole
-        //[Authorize(Roles = "Admin")]
-        [AllowAnonymous]
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [Route("Admin/AddRole")]
         public async Task AddRole(UserRolePairModel pair)
@@ -114,8 +155,7 @@ namespace TRMApi.Controllers
         }
 
         // POST: api/<UserController>/Admin/RemoveRole
-        //[Authorize(Roles = "Admin")]
-        [AllowAnonymous]
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [Route("Admin/RemoveRole")]
         public async Task RemoveRole(UserRolePairModel pair)

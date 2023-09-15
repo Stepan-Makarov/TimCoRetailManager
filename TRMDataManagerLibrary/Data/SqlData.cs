@@ -29,6 +29,13 @@ namespace TRMDataManagerLibrary.Data
             return output;
         }
 
+        public void CreateUser(UserModel user)
+        {
+            _db.SaveData("spUser_Insert",
+                new { user.Id, user.FirstName, user.LastName, user.EmailAddress },
+                connectionStringName);
+        }
+
         public List<ProductModel> GetAllProducts()
         {
             var output = _db.LoadData<ProductModel, dynamic>("dbo.spProduct_GetAll",
