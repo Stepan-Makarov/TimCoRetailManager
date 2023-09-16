@@ -18,16 +18,19 @@ namespace TRMDesktopUIwpf.ViewModels
         private readonly ILoggedInUserModel _user;
         private readonly IAPIHelper _apiHelper;
         private readonly UserUIModel _userEF;
+        private readonly IAuthenticationEndpoint _authentication;
 
         public ShellViewModel(IEventAggregator events,
                               ILoggedInUserModel user,
                               IAPIHelper apiHelper,
-                              UserUIModel userEF)
+                              UserUIModel userEF,
+                              IAuthenticationEndpoint authentication)
         {
             _events = events;
             _user = user;
             _apiHelper = apiHelper;
             _userEF = userEF;
+            _authentication = authentication;
             _events.SubscribeOnPublishedThread(this);
             ActivateItemAsync(IoC.Get<LoginViewModel>());
         }
@@ -45,7 +48,7 @@ namespace TRMDesktopUIwpf.ViewModels
         public async Task LogOut()
         {
             _user.ResetUserModel();
-            _apiHelper.LogOffUser();
+            _authentication.LogOffUser();
 
             await ActivateItemAsync(IoC.Get<LoginViewModel>());
 

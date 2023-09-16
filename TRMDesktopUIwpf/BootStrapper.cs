@@ -59,6 +59,7 @@ namespace TRMDesktopUIwpf
             _container.Instance(configureAutoMapper());
 
             _container.Instance(_container)
+                .PerRequest<IAuthenticationEndpoint, AuthenticationEndpoint>()
                 .PerRequest<IProductEndpoint, ProductEndpoint>()
                 .PerRequest<IUserEndPoint, UserEndPoint>()
                 .PerRequest<ISaleEndPoint, SaleEndPoint>();

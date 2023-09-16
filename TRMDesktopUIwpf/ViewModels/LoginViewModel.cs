@@ -11,15 +11,17 @@ namespace TRMDesktopUIwpf.ViewModels
 {
     public class LoginViewModel : Screen
     {
-        public LoginViewModel(IAPIHelper apiHelper, IEventAggregator events)
+        public LoginViewModel(IAPIHelper apiHelper, IAuthenticationEndpoint authentication, IEventAggregator events)
         {
             _apiHelper = apiHelper;
+            _authentication = authentication;
             _events = events;
         }
 
         private string? _userName = "Tom@mail.ru";
         private string? _password = "Tom123456.";
         private readonly IAPIHelper _apiHelper;
+        private readonly IAuthenticationEndpoint _authentication;
         private readonly IEventAggregator _events;
 
         public string? UserName
@@ -94,9 +96,9 @@ namespace TRMDesktopUIwpf.ViewModels
             {
                 ErrorMessage = "";
 
-                var result = await _apiHelper.Authenticate(UserName, Password);
+                var result = await _authentication.Authenticate(UserName, Password);
 
-                await _apiHelper.GetLoggedInUserInfo(result.Access_Token);
+                await _authentication.GetLoggedInUserInfo(result.Access_Token);
 
                 await _events.PublishOnUIThreadAsync(new LogOnEvent());
             }
