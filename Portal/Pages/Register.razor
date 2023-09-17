@@ -1,0 +1,92 @@
+﻿@page "/register"
+<h3>Create an Account</h3>
+@inject IUserEndPoint UserEndpoint
+@inject IAuthenticationService AuthService
+@inject NavigationManager NavManager
+
+@if (string.IsNullOrWhiteSpace(errorMessage) == false)
+{
+    <div class="alert alert-danger" role="alert">
+        @errorMessage
+    </div>
+}
+
+<EditForm Model="@newUser" OnValidSubmit="CreateUser">
+    <DataAnnotationsValidator />
+
+    <div class="row">
+        <label for="first-name" class="col-md-3 col-form-label">First Name</label>
+        <div class="col-md-9">
+            <InputText id="first-name" class="form-control" @bind-Value="newUser.FirstName"></InputText>
+            <ValidationMessage For="@(() => newUser.FirstName)"></ValidationMessage>
+        </div>
+    </div>
+
+    <div class="row">
+        <label for="last-name" class="col-md-3 col-form-label">Last Name</label>
+        <div class="col-md-9">
+            <InputText id="last-name" class="form-control" @bind-Value="newUser.LastName"></InputText>
+            <ValidationMessage For="@(() => newUser.LastName)"></ValidationMessage>
+        </div>
+    </div>
+
+    <div class="row">
+        <label for="email" class="col-md-3 col-form-label">Email Address</label>
+        <div class="col-md-9">
+            <InputText id="email" class="form-control" @bind-Value="newUser.EmailAddress"></InputText>
+            <ValidationMessage For="@(() => newUser.EmailAddress)"></ValidationMessage>
+        </div>
+    </div>
+
+    <div class="row">
+        <label for="password" class="col-md-3 col-form-label">Password</label>
+        <div class="col-md-9">
+            <InputText type="password" id="password" class="form-control" @bind-Value="newUser.Password"></InputText>
+            <ValidationMessage For="@(() => newUser.Password)"></ValidationMessage>
+        </div>
+    </div>
+
+    <div class="row">
+        <label for="confirm-password" class="col-md-3 col-form-label">Confirm Password</label>
+        <div class="col-md-9">
+            <InputText type="password" id="confirm-password" class="form-control" @bind-Value="newUser.ConfirmPassword"></InputText>
+            <ValidationMessage For="@(() => newUser.ConfirmPassword)"></ValidationMessage>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12 text-end">
+            <button type="submit" class="btn btn-success">Create Account</button>
+        </div>
+    </div>
+</EditForm>
+
+@code {
+    CreateUserUIModel newUser = new();
+    string? errorMessage;
+
+    private async Task CreateUser()
+    {
+        try
+        {
+            errorMessage = "";
+
+            await UserEndpoint.CreateUser(newUser);
+
+            var result = await AuthService.Login(new() { Email = newUser.EmailAddress, Password = newUser.Password });
+
+            if (result != null)
+            {
+                NavManager.NavigateTo("/");
+            }
+            else
+            {
+                errorMessage = "The registration is succeeded but there was an error when trying to log in";
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = ex.Message;
+        }
+    }
+}

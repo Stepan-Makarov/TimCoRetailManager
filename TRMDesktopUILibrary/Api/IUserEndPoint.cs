@@ -8,5 +8,6 @@ namespace TRMDesktopUILibrary.Api
         Task<List<RoleUIModel>> GetAllRoles();
         Task AddUserToRole(string userId, string roleName);
         Task RemoveUserFromRole(string userId, string roleName);
+        Task CreateUser(CreateUserUIModel user);
     }
 }

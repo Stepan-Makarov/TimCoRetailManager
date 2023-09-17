@@ -62,7 +62,11 @@ namespace TRMApi.Controllers
 
                     IdentityResult result = await _userManager.CreateAsync(newUser, user.Password);
 
-                    if (result.Succeeded)
+                    if (result.Succeeded == false)
+                    {
+                        return BadRequest(result.Errors);
+                    }
+                    else
                     {
                         existingUser = await _userManager.FindByEmailAsync(user.EmailAddress);
 
@@ -77,7 +81,6 @@ namespace TRMApi.Controllers
                         _db.CreateUser(u);
                         return Ok();
                     }
-                    
                 }
             }
             return BadRequest();

@@ -37,7 +37,7 @@ namespace Portal.Authentication
                 new KeyValuePair<string, string>("password", userForAuthentication.Password)
             });
 
-            string apiTokenUrl = $"{_config["apiLocation"]}{_config["tokenEndpoint"]}";
+            string apiTokenUrl = $"{_config["api"]}{_config["tokenEndpoint"]}";
             HttpResponseMessage? authResult = await _client.PostAsync(apiTokenUrl, data);
 
             if (authResult.IsSuccessStatusCode)
