@@ -11,16 +11,14 @@ namespace TRMDesktopUIwpf.ViewModels
 {
     public class LoginViewModel : Screen
     {
-        public LoginViewModel(IAPIHelper apiHelper, IAuthenticationEndpoint authentication, IEventAggregator events)
+        public LoginViewModel(IAuthenticationEndpoint authentication, IEventAggregator events)
         {
-            _apiHelper = apiHelper;
             _authentication = authentication;
             _events = events;
         }
 
         private string? _userName = "Tom@mail.ru";
         private string? _password = "Tom123456.";
-        private readonly IAPIHelper _apiHelper;
         private readonly IAuthenticationEndpoint _authentication;
         private readonly IEventAggregator _events;
 

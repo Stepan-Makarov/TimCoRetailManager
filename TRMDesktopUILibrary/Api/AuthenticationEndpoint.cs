@@ -27,18 +27,16 @@ namespace TRMDesktopUILibrary.Api
                 new KeyValuePair<string, string>("password", password)
             });
 
-            using (HttpResponseMessage response = await _apiHelper.ApiClient.PostAsync("/Token", data))
+            using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsync("/Token", data);
+            if (response.IsSuccessStatusCode)
             {
-                if (response.IsSuccessStatusCode)
-                {
-                    var result = await response.Content.ReadAsAsync<AuthenticatedUserModel>();
-                    return result;
-                }
+                var result = await response.Content.ReadAsAsync<AuthenticatedUserModel>();
+                return result;
+            }
 
-                else
-                {
-                    throw new Exception(response.ReasonPhrase);
-                }
+            else
+            {
+                throw new Exception(response.ReasonPhrase);
             }
         }
 
@@ -54,24 +52,22 @@ namespace TRMDesktopUILibrary.Api
             _apiHelper.ApiClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             _apiHelper.ApiClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
 
-            using (HttpResponseMessage response = await _apiHelper.ApiClient.GetAsync("/api/User"))
+            using HttpResponseMessage response = await _apiHelper.ApiClient.GetAsync("/api/User");
+            if (response.IsSuccessStatusCode)
             {
-                if (response.IsSuccessStatusCode)
-                {
-                    var result = await response.Content.ReadAsAsync<LoggedInUserModel>();
+                var result = await response.Content.ReadAsAsync<LoggedInUserModel>();
 
-                    _loggedUser.Id = result.Id;
-                    _loggedUser.FirstName = result.FirstName;
-                    _loggedUser.LastName = result.LastName;
-                    _loggedUser.EmailAddress = result.EmailAddress;
-                    _loggedUser.CreateDate = result.CreateDate;
-                    _loggedUser.Token = token;
-                }
+                _loggedUser.Id = result.Id;
+                _loggedUser.FirstName = result.FirstName;
+                _loggedUser.LastName = result.LastName;
+                _loggedUser.EmailAddress = result.EmailAddress;
+                _loggedUser.CreateDate = result.CreateDate;
+                _loggedUser.Token = token;
+            }
 
-                else
-                {
-                    throw new Exception(response.ReasonPhrase);
-                }
+            else
+            {
+                throw new Exception(response.ReasonPhrase);
             }
         }
     }

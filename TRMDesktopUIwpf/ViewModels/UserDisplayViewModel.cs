@@ -76,7 +76,7 @@ namespace TRMDesktopUIwpf.ViewModels
             Users = new BindingList<UserDisplayModel>(users);
         }
 
-        private BindingList<UserDisplayModel>? _users = new BindingList<UserDisplayModel>();
+        private BindingList<UserDisplayModel>? _users = new();
         public BindingList<UserDisplayModel>? Users
         {
             get
@@ -102,13 +102,14 @@ namespace TRMDesktopUIwpf.ViewModels
                 _selectedUser = value;
                 UserRoles?.Clear();
                 DisplayRoleNames();
+                //TODO Make method or event for this
                 LoadRoles();
                 NotifyOfPropertyChange(() => SelectedUser);
             }
         }
 
 
-        private BindingList<RoleUIModel>? _userRoles = new BindingList<RoleUIModel>();
+        private BindingList<RoleUIModel>? _userRoles = new();
         public BindingList<RoleUIModel>? UserRoles
         {
             get
@@ -122,7 +123,7 @@ namespace TRMDesktopUIwpf.ViewModels
             }
         }
 
-        private BindingList<RoleUIModel>? _avaliableRoles = new BindingList<RoleUIModel>();
+        private BindingList<RoleUIModel>? _avaliableRoles = new();
         public BindingList<RoleUIModel>? AvaliableRoles
         {
             get

@@ -18,6 +18,15 @@
             <button type="button" class="btn btn-primary" @onclick="@RegisterUser">Register</button>
         </div>
     </div>
+
+    @if (showAuthenticationError)
+    {
+        <div class="form-row">
+            <div class="text-danger">
+                @authenticationErrorMessage
+            </div>
+        </div>
+    }
 </EditForm>
 
 @code {
@@ -25,7 +34,7 @@
     private bool showAuthenticationError = false;
     private string? authenticationErrorMessage = "";
 
-    private async Task RegisterUser()
+    private void RegisterUser()
     {
         NavManager.NavigateTo("/register");
     }

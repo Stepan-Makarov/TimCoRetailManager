@@ -59,7 +59,6 @@ namespace Portal.Authentication
             else
             {
                 throw new Exception(authResult.ReasonPhrase);
-                return null;
             }
         }
 
