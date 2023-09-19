@@ -186,7 +186,7 @@ namespace TRMDesktopUIwpf.ViewModels
             return UserRoles;
         }
 
-        private async Task LoadRoles()
+        private async void LoadRoles()
         {
             AvaliableRoles?.Clear();
 

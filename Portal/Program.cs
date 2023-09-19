@@ -23,6 +23,7 @@ builder.Services.AddSingleton<ILoggedInUserModel, LoggedInUserModel>();
 builder.Services.AddTransient<IProductEndpoint, ProductEndpoint>();
 builder.Services.AddTransient<IUserEndPoint, UserEndPoint>();
 builder.Services.AddTransient<ISaleEndPoint, SaleEndPoint>();
+builder.Services.AddTransient<IAuthenticationEndpoint, AuthenticationEndpoint>();
 
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 
