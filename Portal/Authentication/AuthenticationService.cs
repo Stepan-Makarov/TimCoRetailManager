@@ -2,9 +2,7 @@
 using Microsoft.AspNetCore.Components.Authorization;
 using Portal.Models;
 using System.Net.Http.Headers;
-using System.Security.Cryptography.X509Certificates;
 using System.Text.Json;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Portal.Authentication
 {

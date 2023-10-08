@@ -1,6 +1,7 @@
 ﻿@page "/products"
 @inject IProductEndpoint ProductEndpoint
-@inject IConfiguration config
+@inject IConfiguration Config
+@inject Blazored.LocalStorage.ILocalStorageService LocalStorage
 @attribute [Authorize]
 @* https://dummyimage.com/1200x900/000/fff&text=Product *@
 <h3>Products</h3>
@@ -55,12 +56,35 @@
 @code {
     private List<UIProductModel>? products;
     private string? api;
-
-
+    private const string? productListName = "productList";
+    private const string? productCashDate = "productCashDate";
 
     protected override async Task OnInitializedAsync()
     {
-        api = config.GetValue<string>("api");
-        products = await ProductEndpoint.GetAllProducts();
+        api = Config.GetValue<string>("api");
+
+        products = await LocalStorage.GetItemAsync<List<UIProductModel>>(productListName);
+        DateTime? cashDateCreated = await LocalStorage.GetItemAsync<DateTime>(productCashDate);
+        double totalMinutes = 0;
+
+        if (cashDateCreated != null)
+        {
+            totalMinutes = DateTime.UtcNow.Subtract((DateTime)cashDateCreated).TotalMinutes;
+        }
+
+        if (products == null || cashDateCreated is null || totalMinutes > 10)
+        {
+            try
+            {
+                products = await ProductEndpoint.GetAllProducts();
+
+                await LocalStorage.SetItemAsync<List<UIProductModel>>(productListName, products);
+                await LocalStorage.SetItemAsync<DateTime>(productCashDate, DateTime.UtcNow);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);   
+            }
+        }
     }
 }
